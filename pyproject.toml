@@ -10,6 +10,11 @@ python = "^3.13"
 django = "^5.1.7"
 djangorestframework = "^3.16.0"
 environs = "^14.1.1"
+psycopg2-binary = "^2.9.10"
+pillow = "^11.1.0"
+black = "^25.1.0"
+flake8 = "^7.1.2"
+isort = "^6.0.1"
 
 
 [build-system]

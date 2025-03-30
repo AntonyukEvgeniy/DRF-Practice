@@ -1,15 +1,19 @@
 from rest_framework import serializers
 
-from .models import User, Payment
-
+from .models import Payment, User
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = [
-            "id", 'user', 'payment_date', 'paid_course',
-            'paid_lesson', 'amount', 'payment_method'
+            "id",
+            "user",
+            "payment_date",
+            "paid_course",
+            "paid_lesson",
+            "amount",
+            "payment_method",
         ]
 
 
@@ -18,7 +22,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "email", "first_name", "last_name", "phone", "city", "avatar","payments"]
+        fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "phone",
+            "city",
+            "avatar",
+            "payments",
+        ]
         read_only_fields = ["email"]
 
     def update(self, instance, validated_data):
@@ -34,4 +47,3 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "password", "first_name", "last_name", "phone", "city"]
-

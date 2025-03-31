@@ -27,13 +27,13 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonListCreateView(generics.ListCreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrModerator]
+    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
 
 class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrModerator]
+    permission_classes = [IsAuthenticated]
 
 class SubscriptionUpdateView(generics.UpdateAPIView):
     serializer_class = SubscriptionSerializer

@@ -26,10 +26,10 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonListCreateView(generics.ListCreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, ModeratorPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrModerator]
 
 
 class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, ModeratorPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrModerator]

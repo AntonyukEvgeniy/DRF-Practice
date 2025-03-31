@@ -1,25 +1,54 @@
 from django_filters import DateFilter, FilterSet, NumberFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics
-from rest_framework.permissions import AllowAny
+from rest_framework import filters, generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Payment, User
 from .serializers import (
     PaymentSerializer,
     UserProfileSerializer,
-    UserRegistrationSerializer,
+    UserRegistrationSerializer, MyTokenObtainPairSerializer,
 )
 
+class MyTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = MyTokenObtainPairSerializer
 
-class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
+class UserProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return self.request.user
 
 class UserRegistrationView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response(
+            {
+                "user": UserProfileSerializer(user).data,
+                "message": "Пользователь успешно зарегистрирован",
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['is_active', 'city']
+    search_fields = ['email', 'first_name', 'last_name']
+    ordering_fields = ['date_joined', 'email']
+    ordering = ['-date_joined']
 
 
 class PaymentFilter(FilterSet):
@@ -40,3 +69,6 @@ class PaymentListView(generics.ListAPIView):
     filterset_class = PaymentFilter
     ordering_fields = ["payment_date"]
     ordering = ["-payment_date"]  # По умолчанию сортировка по убыванию даты
+
+
+

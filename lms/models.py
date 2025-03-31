@@ -48,24 +48,19 @@ class Subscription(models.Model):
         "users.User",
         on_delete=models.CASCADE,
         related_name="subscriptions",
-        verbose_name="Пользователь"
+        verbose_name="Пользователь",
     )
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
         related_name="subscriptions",
-        verbose_name="Курс"
+        verbose_name="Курс",
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата подписки"
-    )
-    is_active = models.BooleanField(
-        default=False,
-        verbose_name="Статус подписки"
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата подписки")
+    is_active = models.BooleanField(default=False, verbose_name="Статус подписки")
+
     def __str__(self):
-        return f'Подписка {self.user.email} на курс {self.course.title}'
+        return f"Подписка {self.user.email} на курс {self.course.title}"
 
     class Meta:
         verbose_name = "Подписка"

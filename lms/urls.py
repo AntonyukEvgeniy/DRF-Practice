@@ -4,7 +4,8 @@ from rest_framework import routers
 from lms.views import (
     CourseViewSet,
     LessonListCreateView,
-    LessonRetrieveUpdateDestroyView, SubscriptionUpdateView,
+    LessonRetrieveUpdateDestroyView,
+    SubscriptionUpdateView,
 )
 
 app_name = "lms"
@@ -18,5 +19,9 @@ urlpatterns = [
         LessonRetrieveUpdateDestroyView.as_view(),
         name="lesson-detail",
     ),
-path("courses/<int:course_id>/subscription/", SubscriptionUpdateView.as_view(), name="subscription-update"),
+    path(
+        "courses/<int:course_id>/subscription/",
+        SubscriptionUpdateView.as_view(),
+        name="subscription-update",
+    ),
 ]

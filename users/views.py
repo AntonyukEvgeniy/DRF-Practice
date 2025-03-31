@@ -7,14 +7,17 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Payment, User
 from .serializers import (
+    MyTokenObtainPairSerializer,
     PaymentSerializer,
     UserProfileSerializer,
-    UserRegistrationSerializer, MyTokenObtainPairSerializer,
+    UserRegistrationSerializer,
 )
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = MyTokenObtainPairSerializer
+
 
 class UserProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
@@ -23,6 +26,7 @@ class UserProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user
+
 
 class UserRegistrationView(generics.CreateAPIView):
     permission_classes = [AllowAny]
@@ -40,15 +44,20 @@ class UserRegistrationView(generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['is_active', 'city']
-    search_fields = ['email', 'first_name', 'last_name']
-    ordering_fields = ['date_joined', 'email']
-    ordering = ['-date_joined']
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = ["is_active", "city"]
+    search_fields = ["email", "first_name", "last_name"]
+    ordering_fields = ["date_joined", "email"]
+    ordering = ["-date_joined"]
 
 
 class PaymentFilter(FilterSet):
@@ -69,6 +78,3 @@ class PaymentListView(generics.ListAPIView):
     filterset_class = PaymentFilter
     ordering_fields = ["payment_date"]
     ordering = ["-payment_date"]  # По умолчанию сортировка по убыванию даты
-
-
-

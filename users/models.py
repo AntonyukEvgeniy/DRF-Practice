@@ -1,7 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from rest_framework.permissions import AllowAny
+
 
 from lms.models import Course, Lesson
 
@@ -47,8 +47,7 @@ class User(AbstractUser):
 
     class Meta:
         verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи",
-
+        verbose_name_plural = ("Пользователи",)
 
     def __str__(self):
         return self.email

@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsOwnerOrModerator, ModeratorPermission
 
 from .models import Course, Lesson, Subscription
+from .paginators import StandardResultsSetPagination
 from .serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
@@ -12,7 +13,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrModerator]
-
+    pagination_class = StandardResultsSetPagination
     def get_queryset(self):
         if self.request.user.groups.filter(name="moderators").exists():
             return Course.objects.all()
@@ -27,7 +28,7 @@ class LessonListCreateView(generics.ListCreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrModerator]
-
+    pagination_class = StandardResultsSetPagination
 
 class LessonRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()

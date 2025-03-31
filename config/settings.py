@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "lms",
     "users",
     "rest_framework_simplejwt",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [

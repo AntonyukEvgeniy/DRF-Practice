@@ -5,6 +5,7 @@ from lms.views import (
     CourseViewSet,
     LessonListCreateView,
     LessonRetrieveUpdateDestroyView,
+    SubscriptionUpdateView,
 )
 
 app_name = "lms"
@@ -17,5 +18,10 @@ urlpatterns = [
         "lessons/<int:pk>/",
         LessonRetrieveUpdateDestroyView.as_view(),
         name="lesson-detail",
+    ),
+    path(
+        "courses/<int:course_id>/subscription/",
+        SubscriptionUpdateView.as_view(),
+        name="subscription-update",
     ),
 ]

@@ -7,7 +7,12 @@ from users.permissions import IsOwnerOrModerator
 
 from .models import Course, Lesson, Subscription
 from .paginators import StandardResultsSetPagination
-from .serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer, CourseWithPriceSerializer
+from .serializers import (
+    CourseSerializer,
+    CourseWithPriceSerializer,
+    LessonSerializer,
+    SubscriptionSerializer,
+)
 from .services.stripe_service import StripeService
 
 
@@ -27,11 +32,11 @@ class CourseViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == "create":
             return CourseWithPriceSerializer
         return CourseSerializer
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def create_checkout_session(self, request, pk=None):
         """
         Создает сессию оплаты для курса
@@ -42,20 +47,17 @@ class CourseViewSet(viewsets.ModelViewSet):
         stripe_service = StripeService()
 
         # Создаем сессию оплаты
-        success_url = request.build_absolute_uri(f'/courses/{course.id}/success/')
-        cancel_url = request.build_absolute_uri(f'/courses/{course.id}/cancel/')
+        success_url = request.build_absolute_uri(f"/courses/{course.id}/success/")
+        cancel_url = request.build_absolute_uri(f"/courses/{course.id}/cancel/")
 
         session = stripe_service.create_payment_link_session(
             course_id=str(course.id),
             price_id=course.stripe_price_id,
             success_url=success_url,
-            cancel_url=cancel_url
+            cancel_url=cancel_url,
         )
 
-        return Response({
-            'session_id': session['id'],
-            'checkout_url': session['url']
-        })
+        return Response({"session_id": session["id"], "checkout_url": session["url"]})
 
 
 # Generic views для модели Lesson

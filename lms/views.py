@@ -24,9 +24,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        if self.request.user.groups.filter(name="moderators").exists():
-            return Course.objects.all()
-        return Course.objects.filter(owner=self.request.user)
+        qs = super().get_queryset()
+        if self.request.user.is_moderator:
+            return qs
+        return qs.filter(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

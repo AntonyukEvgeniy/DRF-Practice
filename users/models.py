@@ -41,6 +41,7 @@ class User(AbstractUser):
     avatar = models.ImageField(
         upload_to="users/avatars/", verbose_name="Аватар", blank=True, null=True
     )
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -50,6 +51,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    @property
+    def is_moderator(self) -> bool:
+        return self.groups.filter(name="moderators")
 
 
 class Payment(models.Model):

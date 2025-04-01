@@ -7,6 +7,14 @@ class Course(models.Model):
         upload_to="course_previews/", verbose_name="Превью", blank=True, null=True
     )
     description = models.TextField(verbose_name="Описание")
+    owner = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="courses",
+        verbose_name="Владелец",
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.title

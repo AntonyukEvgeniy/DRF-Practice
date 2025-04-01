@@ -1,10 +1,12 @@
 from django.urls import include, path
 from rest_framework import routers
+
 from lms.views import (
     CourseViewSet,
     LessonListCreateView,
     LessonRetrieveUpdateDestroyView,
 )
+
 app_name = "lms"
 router = routers.DefaultRouter()
 router.register(r"courses", CourseViewSet)

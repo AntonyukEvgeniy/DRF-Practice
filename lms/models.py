@@ -15,7 +15,7 @@ class Course(models.Model):
         blank=True,
         null=True,
     )
-
+    stripe_price_id = models.CharField(max_length=100, blank=True, null=True)
     def __str__(self):
         return self.title
 

@@ -16,6 +16,9 @@ class Course(models.Model):
         null=True,
     )
     stripe_price_id = models.CharField(max_length=100, blank=True, null=True)
+    last_update = models.DateTimeField(
+        auto_now=True, verbose_name="Последнее обновление"
+    )
 
     def __str__(self):
         return self.title

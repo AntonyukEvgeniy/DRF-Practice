@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from users.permissions import IsOwnerOrModerator
+from users.tasks import send_course_update_notification
 
 from .models import Course, Lesson, Subscription
 from .paginators import StandardResultsSetPagination
@@ -30,7 +31,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         return qs.filter(owner=self.request.user)
 
     def perform_update(self, serializer):
-        serializer.save(owner=self.request.user)
+        course = serializer.save(owner=self.request.user)
+        send_course_update_notification.delay(course.id)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

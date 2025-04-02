@@ -2,9 +2,9 @@ from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from lms.tasks import send_course_update_notification
 
 from users.permissions import IsOwnerOrModerator
-from users.tasks import send_course_update_notification
 
 from .models import Course, Lesson, Subscription
 from .paginators import StandardResultsSetPagination

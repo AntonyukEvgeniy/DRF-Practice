@@ -3,12 +3,10 @@ from typing import Dict, Optional
 import requests
 from environs import Env
 
+from config.settings import STRIPE_API_KEY, STRIPE_API_URL
+
 env = Env()
 env.read_env()
-
-
-STRIPE_API_KEY = env.str("STRIPE_SECRET_API_KEY")
-STRIPE_API_URL = "https://api.stripe.com/v1"
 
 
 class StripeService:

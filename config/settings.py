@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
-from environs import Env
+from environs import Env, validate
 
 env = Env()
 env.read_env()
@@ -168,7 +168,9 @@ CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
-CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_BROKER_URL = env.str(
+    "CELERY_BROKER_URL", validate=validate.URL(schemes=["redis"])
+)
 # Celery Beat Settings
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
@@ -183,4 +185,4 @@ EMAIL_HOST_PASSWORD = env.str(
 )  # Замените на ваш пароль приложения
 
 STRIPE_API_KEY = env.str("STRIPE_SECRET_API_KEY")
-STRIPE_API_URL = "https://api.stripe.com/v1"
+STRIPE_API_URL = env.str("STRIPE_API_URL", default="https://api.stripe.com/v1")

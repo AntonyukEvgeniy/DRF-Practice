@@ -16,12 +16,13 @@ def send_course_update_notification(course_id):
     """
     Отправляет письмо на email всем подписчикам курса, по событию обновления курса
     """
-    course = Course.objects.get(id=course_id)
-    subscriptions = Subscription.objects.filter(course=course, is_active=True)
     # Проверяем, прошло ли 4 часа с последнего обновления
     four_hours_ago = timezone.now() - timedelta(hours=4)
+    course = Course.objects.get(id=course_id)
     if course.last_update and course.last_update > four_hours_ago:
         logger.info("Уведомление не отправлено: курс обновлялся менее 4 часов назад")
+        return
+    subscriptions = Subscription.objects.filter(course=course, is_active=True)
     for subscription in subscriptions:
         send_mail(
             subject=f'Курс "{course.title}" был обновлен',

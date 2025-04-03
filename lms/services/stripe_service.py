@@ -1,12 +1,6 @@
 from typing import Dict, Optional
-
 import requests
-from environs import Env
-
 from config.settings import STRIPE_API_KEY, STRIPE_API_URL
-
-env = Env()
-env.read_env()
 
 
 class StripeService:

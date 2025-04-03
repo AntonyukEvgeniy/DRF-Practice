@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
-from environs import Env
+from environs import Env, validate
 
 env = Env()
 env.read_env()
@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "lms",
     "users",
     "rest_framework_simplejwt",
+    "drf_yasg",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -122,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
@@ -153,6 +155,34 @@ REST_FRAMEWORK = {
 
 # Настройки срока действия токенов
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=150),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+# Users_Groups
+MODERATORS_GROUP = "moderators"
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Europe/Moscow"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
+CELERY_BROKER_URL = env.str(
+    "CELERY_BROKER_URL", validate=validate.URL(schemes=["redis"])
+)
+# Celery Beat Settings
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# Email settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST")  # Замените на ваш SMTP сервер
+EMAIL_PORT = env.int("EMAIL_PORT", default="587")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")  # Замените на ваш email
+EMAIL_HOST_PASSWORD = env.str(
+    "EMAIL_HOST_PASSWORD"
+)  # Замените на ваш пароль приложения
+
+STRIPE_API_KEY = env.str("STRIPE_SECRET_API_KEY")
+STRIPE_API_URL = env.str("STRIPE_API_URL", default="https://api.stripe.com/v1")

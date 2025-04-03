@@ -1,3 +1,4 @@
+from environs import env
 from rest_framework import permissions
 
 
@@ -21,6 +22,7 @@ class IsOwnerOrModerator(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # Модераторы имеют полный доступ
+        env.str("MODERATORS_GROUP")
         if request.user.groups.filter(name="moderators").exists():
             return True
         # Владельцы могут просматривать и редактировать свои курсы
